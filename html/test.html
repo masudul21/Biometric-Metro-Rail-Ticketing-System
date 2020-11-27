@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script type=text/javascript>
+    $(function() {
+      $('#start').bind('click', function() {
+        $("#start").hide();
+        $("#meg").html("<h4>"+ " Put you finger on the sensor " + "</h4>");
+        $.getJSON($SCRIPT_ROOT + '/index', {
+          a: "1"
+        }, function(data) {
+          if(data.result == '1'){
+            window.location.href = $SCRIPT_ROOT + 'reg_one';
+            return;
+          }else {       
+                  setTimeout( function(){
+                                         $("#image").attr("src","/static/finger_img_first.gif"); 
+                                        }, 1200);
+                      $("#image").attr("src","/static/finger3.gif");
+                      $("#start").hide();
+                      $("#meg").html("<h4>"+ data.result + "</h4>");
+                        $.getJSON($SCRIPT_ROOT + '/index', {
+                          a: "2"
+                    }, function(data) {
+                        setTimeout(function(){ $("#image").attr("src","/static/done.gif"); }, 1440);
+                        setTimeout(function(){ $("#image").attr("src","/static/done_img.gif"); }, 3190);
+                        setTimeout(function(){ window.location.href = $SCRIPT_ROOT + 'register/' + data['id']; }, 3240);
+                        $("#image").attr("src","/static/finger_ani_second.gif");
+                        $("#meg").html("<h4>"+ data['result'] + "</h4>");
+                    });
+                }
+        });
+        
+        return false;
+      });
+    });
+  </script>
+
+
+<div class="container">
+  <div class="row justify-content-center align-items-center" style="height:100vh">
+    <div class="col-8">
+      <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+        <div class="col-4"></div>
+          <div id="h" class="mx-auto"><h1>REGISTER YOUR FINGERPRINT</h1></div>
+      <div class="mx-auto"> <span id="meg"></span>
+        <button type="button" class="btn btn-primary" id="start"><h3>START</h3></button></div> <span></span>
+      <div class="mx-auto"><img id="image" src="/static/finger_init.jpg" ></div>
+    </div>
+  </div>
+  </div>
+</div>
+
+
+
+   {% endblock %} 
